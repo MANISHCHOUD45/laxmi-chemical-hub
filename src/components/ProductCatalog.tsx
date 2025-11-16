@@ -184,7 +184,15 @@ const productCategories = [
   },
   {
     title: "Coating Paints",
-    products: ["Ethyl Acetate", "Emulsifier", "Pure Solvents"],
+    products: [
+      "Ethyl Acetate",
+      "Emulsifier",
+      "Pure Solvents",
+      "Paint Thinner",
+      "NC Thinner",
+      "Deco Thinner",
+      "PU Thinner",
+    ],
     icon: "🎨",
   },
   // {
