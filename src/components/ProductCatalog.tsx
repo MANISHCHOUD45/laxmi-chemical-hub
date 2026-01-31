@@ -116,7 +116,6 @@ const productCategories = [
       "M-E-G",
       "Di Propylene Glycol",
       "Polyethylene Glycol",
-      "Triethanolamine",
     ],
     icon: "✨",
   },
