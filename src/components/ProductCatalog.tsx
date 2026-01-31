@@ -172,11 +172,6 @@ const productCategories = [
     ],
     icon: "🎨",
   },
-  // {
-  //   title: "New Products",
-  //   products: ["Tri Chloro Ethylene"],
-  //   icon: "✨",
-  // },
 ];
 
 const ProductCatalog = () => {
