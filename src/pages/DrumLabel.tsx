@@ -16,6 +16,9 @@ interface LabelFormData {
   expDate: string;
   make: string;
   netQty: string;
+  tareQty: string;
+  grossQty: string;
+  qtyUnit: "kgs" | "ltrs";
 }
 
 type Step = "select-product" | "fill-form" | "choose-layout" | "preview";
@@ -23,6 +26,15 @@ type Step = "select-product" | "fill-form" | "choose-layout" | "preview";
 /* ── Component ─────────────────────────────────────── */
 
 const PASS = "laxmichem72";
+
+const MAKE_OPTIONS = [
+  "Deepak Fertilisers and Petrochemicals Corporation Limited",
+  "Hindustan Organic Chemicals Limited",
+  "Gujarat Alkalies and Chemicals Limited",
+  "Satyam Petrochemicals",
+  "Bharat Petroleum Corporation Limited",
+  "Laxmi Organic Industries Ltd",
+];
 
 const DrumLabel = () => {
   const navigate = useNavigate();
@@ -45,6 +57,9 @@ const DrumLabel = () => {
     expDate: "",
     make: "",
     netQty: "",
+    tareQty: "",
+    grossQty: "",
+    qtyUnit: "kgs",
   });
 
   /* ── Helpers ───────────────────────────────────────── */
@@ -97,16 +112,82 @@ const DrumLabel = () => {
 
     // Print-equivalent CSS injected into the html2canvas clone so the PDF
     // renders the same A4 layout the @media print rules produce.
+    //
+    // html2canvas has limited support for `clip-path` and some flex tricks,
+    // so we force an explicit column layout and rectangular banners with
+    // the product name / MSDS text hard-centered.
     const printCss = `
       body { background: #ffffff !important; margin: 0 !important; padding: 0 !important; }
 
-      /* Undo any mobile CSS scaling transforms */
+      /* Undo any mobile CSS scaling transforms and lock column layout */
       .cl {
         transform: none !important;
         width: 650px !important;
         max-width: none !important;
         margin: 0 auto !important;
         box-shadow: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+      }
+
+      /* Header banner — product name, top */
+      .cl__header {
+        clip-path: none !important;
+        -webkit-clip-path: none !important;
+        background: #C8102E !important;
+        height: 46px !important;
+        flex: 0 0 46px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 0 24px !important;
+        order: 1 !important;
+      }
+      .cl__header-text {
+        color: #ffffff !important;
+        display: inline-block !important;
+        width: 100% !important;
+        text-align: center !important;
+        font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif !important;
+        font-size: 28px !important;
+        font-weight: 900 !important;
+        font-style: normal !important;
+        letter-spacing: 4px !important;
+        line-height: 1 !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35) !important;
+      }
+
+      /* Body between banners */
+      .cl__body {
+        flex: 1 1 auto !important;
+        order: 2 !important;
+      }
+
+      /* Footer banner — MSDS, bottom */
+      .cl__footer {
+        clip-path: none !important;
+        -webkit-clip-path: none !important;
+        background: #C8102E !important;
+        height: 34px !important;
+        flex: 0 0 34px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 0 20px !important;
+        order: 3 !important;
+      }
+      .cl__footer-text {
+        color: #ffffff !important;
+        display: inline-block !important;
+        width: 100% !important;
+        text-align: center !important;
+        font-size: 12px !important;
+        font-weight: 800 !important;
+        letter-spacing: 2px !important;
+        line-height: 1 !important;
       }
 
       /* Single label layout — matches @media print .label-preview */
@@ -136,6 +217,10 @@ const DrumLabel = () => {
       .a4-sheet__inner {
         width: 100% !important;
         overflow: visible !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 8mm !important;
       }
       .a4-sheet__inner .cl {
         margin: 0 auto !important;
@@ -168,6 +253,23 @@ const DrumLabel = () => {
               const style = clonedDoc.createElement("style");
               style.textContent = printCss;
               clonedDoc.head.appendChild(style);
+
+              // Physically remove on-screen-only chrome so it can't appear in the PDF
+              clonedDoc
+                .querySelectorAll(
+                  ".a4-sheet__meta-top, .a4-sheet__meta-bottom, .a4-sheet__crop"
+                )
+                .forEach((el) => el.remove());
+
+              // Strip the a4-sheet styling wrapper entirely — keep only its labels
+              clonedDoc.querySelectorAll<HTMLElement>(".a4-sheet").forEach((el) => {
+                el.style.border = "none";
+                el.style.boxShadow = "none";
+                el.style.borderRadius = "0";
+                el.style.padding = "0";
+                el.style.aspectRatio = "auto";
+                el.style.background = "#ffffff";
+              });
             },
           },
           jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
@@ -191,9 +293,14 @@ const DrumLabel = () => {
       expDate: "",
       make: "",
       netQty: "",
+      tareQty: "",
+      grossQty: "",
+      qtyUnit: "kgs",
     });
     setStickersPerPage(1);
   };
+
+  const withUnit = (v: string) => (v ? `${v} ${form.qtyUnit}` : "");
 
   const labelProps = {
     productName: form.productName,
@@ -202,7 +309,9 @@ const DrumLabel = () => {
     mfgDate: formatDate(form.mfgDate),
     expDate: formatDate(form.expDate),
     make: form.make,
-    netQty: form.netQty,
+    netQty: withUnit(form.netQty),
+    tareQty: withUnit(form.tareQty),
+    grossQty: withUnit(form.grossQty),
     safety: getProductSafety(form.productName),
   };
 
@@ -428,23 +537,113 @@ const DrumLabel = () => {
               <label className="label-form__label">
                 Make <span className="label-form__req">*</span>
               </label>
+              <select
+                className="label-form__input"
+                value={MAKE_OPTIONS.includes(form.make) ? form.make : (form.make ? "__custom__" : "")}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (v === "__custom__") {
+                    handleFormChange("make", form.make && !MAKE_OPTIONS.includes(form.make) ? form.make : "");
+                  } else {
+                    handleFormChange("make", v);
+                  }
+                }}
+                style={{ marginBottom: 6 }}
+              >
+                <option value="">-- Select manufacturer --</option>
+                {MAKE_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+                <option value="__custom__">Other (enter custom name)</option>
+              </select>
               <input
                 className="label-form__input"
                 required
-                placeholder="e.g. DEEPAK FERTILIZER PETROCHEMICAL CORPORATION LTD"
+                placeholder="Or type a custom manufacturer name"
                 value={form.make}
                 onChange={(e) => handleFormChange("make", e.target.value)}
               />
             </div>
 
             <div className="label-form__row">
-              <label className="label-form__label">Net Qty</label>
-              <input
-                className="label-form__input"
-                placeholder="e.g. 50 Kg (optional)"
-                value={form.netQty}
-                onChange={(e) => handleFormChange("netQty", e.target.value)}
-              />
+              <label className="label-form__label">Quantity (optional)</label>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: form.qtyUnit === "ltrs" ? "1fr auto" : "1fr 1fr 1fr auto",
+                  gap: 8,
+                }}
+              >
+                <input
+                  className="label-form__input"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  inputMode="decimal"
+                  placeholder="Net"
+                  value={form.netQty}
+                  onChange={(e) => {
+                    const net = e.target.value;
+                    setForm((prev) => {
+                      if (prev.qtyUnit === "ltrs") {
+                        return { ...prev, netQty: net };
+                      }
+                      const n = parseFloat(net);
+                      const t = parseFloat(prev.tareQty);
+                      const gross = !isNaN(n) && !isNaN(t) ? String(+(n + t).toFixed(2)) : prev.grossQty;
+                      return { ...prev, netQty: net, grossQty: gross };
+                    });
+                  }}
+                />
+                {form.qtyUnit === "kgs" && (
+                  <>
+                    <input
+                      className="label-form__input"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      inputMode="decimal"
+                      placeholder="Tare"
+                      value={form.tareQty}
+                      onChange={(e) => {
+                        const tare = e.target.value;
+                        setForm((prev) => {
+                          const n = parseFloat(prev.netQty);
+                          const t = parseFloat(tare);
+                          const gross = !isNaN(n) && !isNaN(t) ? String(+(n + t).toFixed(2)) : prev.grossQty;
+                          return { ...prev, tareQty: tare, grossQty: gross };
+                        });
+                      }}
+                    />
+                    <input
+                      className="label-form__input"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      inputMode="decimal"
+                      placeholder="Gross (auto)"
+                      value={form.grossQty}
+                      onChange={(e) => handleFormChange("grossQty", e.target.value)}
+                      title="Auto-calculated from Net + Tare, but you can override"
+                    />
+                  </>
+                )}
+                <select
+                  className="label-form__input"
+                  value={form.qtyUnit}
+                  onChange={(e) => {
+                    const unit = e.target.value as "kgs" | "ltrs";
+                    setForm((prev) =>
+                      unit === "ltrs"
+                        ? { ...prev, qtyUnit: unit, tareQty: "", grossQty: "" }
+                        : { ...prev, qtyUnit: unit }
+                    );
+                  }}
+                >
+                  <option value="kgs">kgs</option>
+                  <option value="ltrs">ltrs</option>
+                </select>
+              </div>
             </div>
 
             <button type="submit" className="drum-label-page__btn drum-label-page__btn--print" style={{ marginTop: 12 }}>

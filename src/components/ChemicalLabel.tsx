@@ -10,6 +10,8 @@ export interface ChemicalLabelProps {
   expDate: string;
   make: string;
   netQty: string;
+  tareQty: string;
+  grossQty: string;
   safety: ProductSafety;
 }
 
@@ -86,6 +88,8 @@ const ChemicalLabel = ({
   expDate,
   make,
   netQty,
+  tareQty,
+  grossQty,
   safety,
 }: ChemicalLabelProps) => {
   return (
@@ -123,6 +127,8 @@ const ChemicalLabel = ({
             <DataRow label="MAKE" value={make} />
             <DataRow label="EX DATE" value={expDate} red />
             <DataRow label="NET QTY" value={netQty} />
+            <DataRow label="TARE QTY" value={tareQty} />
+            <DataRow label="GROSS QTY" value={grossQty} />
           </div>
 
 {/*
