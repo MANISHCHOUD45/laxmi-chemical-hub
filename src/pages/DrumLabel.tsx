@@ -568,11 +568,7 @@ const DrumLabel = () => {
             <div className="label-form__row">
               <label className="label-form__label">Quantity (optional)</label>
               <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: form.qtyUnit === "ltrs" ? "1fr auto" : "1fr 1fr 1fr auto",
-                  gap: 8,
-                }}
+                className={`label-form__qty-row ${form.qtyUnit === "ltrs" ? "label-form__qty-row--ltrs" : ""}`}
               >
                 <input
                   className="label-form__input"
