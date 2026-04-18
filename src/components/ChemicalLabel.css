@@ -17,24 +17,28 @@
 
 /* ── Slanted Top Banner ────────────────────────────── */
 .cl__header {
-  background: #C8102E;
-  height: 38px;
+  background: linear-gradient(180deg, #D91F36 0%, #C8102E 55%, #A50E26 100%);
+  height: 46px;
   clip-path: polygon(0 0, 100% 0, 100% 87.5%, 0 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
+  padding: 0 24px;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
 }
 
 .cl__header-text {
   color: #fff;
-  font-family: "Arial Black", Impact, sans-serif;
-  font-size: 19px;
+  font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
+  font-size: 28px;
   font-weight: 900;
-  font-style: italic;
-  letter-spacing: 0.5px;
+  font-style: normal;
+  letter-spacing: 3px;
   text-transform: uppercase;
   white-space: nowrap;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ── Body (two columns) ───────────────────────────── */
@@ -332,10 +336,11 @@
 
 .cl__footer-text {
   color: #fff;
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
   text-align: center;
+  line-height: 1;
 }
 
 /* ======================================================
