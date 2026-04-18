@@ -755,6 +755,43 @@
   border-color: #C8102E;
 }
 
+/* Quantity row – responsive grid */
+.label-form__qty-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 8px;
+}
+
+.label-form__qty-row--ltrs {
+  grid-template-columns: 1fr auto;
+}
+
+.label-form__qty-row .label-form__input {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Phones — stack quantity inputs 2×2 (and 1+unit for ltrs) */
+@media (max-width: 640px) {
+  .label-form__qty-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .label-form__qty-row--ltrs {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+/* Very small phones — one input per row */
+@media (max-width: 400px) {
+  .label-form__qty-row {
+    grid-template-columns: 1fr;
+  }
+  .label-form__qty-row--ltrs {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ======================================================
    Step 3 – Layout Picker
    ====================================================== */
