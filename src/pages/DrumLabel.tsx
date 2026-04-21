@@ -485,12 +485,9 @@ const DrumLabel = () => {
 
           <form className="label-form" onSubmit={handleFormSubmit}>
             <div className="label-form__row">
-              <label className="label-form__label">
-                Invoice <span className="label-form__req">*</span>
-              </label>
+              <label className="label-form__label">Invoice</label>
               <input
                 className="label-form__input"
-                required
                 placeholder="e.g. 4176"
                 value={form.invoice}
                 onChange={(e) => handleFormChange("invoice", e.target.value)}
@@ -508,35 +505,27 @@ const DrumLabel = () => {
             </div>
 
             <div className="label-form__row">
-              <label className="label-form__label">
-                MFG Date <span className="label-form__req">*</span>
-              </label>
+              <label className="label-form__label">MFG Date</label>
               <input
                 className="label-form__input"
                 type="date"
-                required
                 value={form.mfgDate}
                 onChange={(e) => handleFormChange("mfgDate", e.target.value)}
               />
             </div>
 
             <div className="label-form__row">
-              <label className="label-form__label">
-                Exp Date <span className="label-form__req">*</span>
-              </label>
+              <label className="label-form__label">Exp Date</label>
               <input
                 className="label-form__input"
                 type="date"
-                required
                 value={form.expDate}
                 onChange={(e) => handleFormChange("expDate", e.target.value)}
               />
             </div>
 
             <div className="label-form__row">
-              <label className="label-form__label">
-                Make <span className="label-form__req">*</span>
-              </label>
+              <label className="label-form__label">Make</label>
               <select
                 className="label-form__input"
                 value={MAKE_OPTIONS.includes(form.make) ? form.make : (form.make ? "__custom__" : "")}
@@ -558,7 +547,6 @@ const DrumLabel = () => {
               </select>
               <input
                 className="label-form__input"
-                required
                 placeholder="Or type a custom manufacturer name"
                 value={form.make}
                 onChange={(e) => handleFormChange("make", e.target.value)}
@@ -736,7 +724,7 @@ const DrumLabel = () => {
 
 /** Convert yyyy-mm-dd → "d/m/yyyy" */
 function formatDate(isoDate: string): string {
-  if (!isoDate) return "\u2014";
+  if (!isoDate) return "";
   const [y, m, d] = isoDate.split("-");
   return `${parseInt(d)}/${parseInt(m)}/${y}`;
 }

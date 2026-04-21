@@ -1,93 +1,98 @@
 /* ======================================================
-   Chemical Drum Label – SVG-Accurate Industrial Design
+   Chemical Drum Label – 3-Column Landscape Industrial Design
+   Matches the printed reference sticker (14.3cm × 9.4cm)
    ====================================================== */
 
 /* ── Label Root ────────────────────────────────────── */
 .cl {
-  width: 650px;
+  width: 860px;
   max-width: 100%;
-  border: 0.5px solid #D8D6D0;
-  border-radius: 6px;
+  aspect-ratio: 143 / 94; /* 14.3cm × 9.4cm landscape */
+  border: 1px solid #000;
   overflow: hidden;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Arial, Helvetica, "Helvetica Neue", sans-serif;
   background: #fff;
-  color: #222;
+  color: #000;
   box-sizing: border-box;
-}
-
-/* ── Slanted Top Banner ────────────────────────────── */
-.cl__header {
-  background: linear-gradient(180deg, #D91F36 0%, #C8102E 55%, #A50E26 100%);
-  height: 46px;
-  clip-path: polygon(0 0, 100% 0, 100% 87.5%, 0 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 24px;
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
-}
-
-.cl__header-text {
-  color: #fff;
-  font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
-  font-size: 28px;
-  font-weight: 900;
-  font-style: normal;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  white-space: nowrap;
-  line-height: 1;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ── Body (two columns) ───────────────────────────── */
-.cl__body {
-  display: flex;
-}
-
-/* ── LEFT COLUMN ──────────────────────────────────── */
-.cl__left {
-  width: 240px;
-  flex-shrink: 0;
-  padding: 10px 18px 6px;
   display: flex;
   flex-direction: column;
 }
 
+/* ── Top Red Banner (BLACK text) ──────────────────── */
+.cl__header {
+  background: #D32F2F;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+}
+
+.cl__header-text {
+  color: #000;
+  font-family: "Arial Black", Impact, sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Body — 3-column grid ─────────────────────────── */
+.cl__body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: #fff;
+  min-height: 0;
+}
+
+.cl__col {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cl__col--2 {
+  border-left: 0.5px solid #ddd;
+  border-right: 0.5px solid #ddd;
+}
+
+/* ═════ COLUMN 1 — Company Info ═════ */
+
 .cl__marketed {
-  font-size: 9px;
-  color: #666;
+  font-size: 11px;
+  font-weight: 700;
+  color: #000;
   margin-bottom: 2px;
 }
 
 .cl__logo {
-  margin-bottom: 4px;
   line-height: 0;
+  margin-bottom: 2px;
 }
 
 .cl__logo-img {
-  width: 120px;
+  width: 150px;
   height: auto;
   display: block;
 }
 
-/* Address */
-.cl__address {
-  margin-bottom: 4px;
-}
-
-.cl__address-name {
-  font-size: 10px;
-  font-weight: 700;
-  color: #222;
-  letter-spacing: 0.3px;
-  margin-bottom: 2px;
+.cl__company-name {
+  color: #D32F2F;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
 }
 
 .cl__address-line {
-  font-size: 9px;
-  color: #333;
+  font-size: 10px;
+  color: #000;
   line-height: 1.4;
 }
 
@@ -96,251 +101,163 @@
 }
 
 .cl__address-phone {
-  font-size: 9px;
-  color: #333;
+  font-size: 10px;
+  color: #000;
   margin-top: 2px;
   display: flex;
   align-items: center;
 }
 
 .cl__wa-icon {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   margin-right: 4px;
   flex-shrink: 0;
   vertical-align: middle;
 }
 
-/* ── Data Card ─────────────────────────────────────── */
+/* ── Data Card (rounded black border) ─────────────── */
 .cl__data-card {
-  background: #FAFAF7;
-  border: 0.5px solid #E5E3DD;
-  border-radius: 4px;
-  padding: 3px 0;
-  flex: 1;
+  border: 1.5px solid #000;
+  border-radius: 12px;
+  padding: 8px 12px;
+  margin-top: 6px;
 }
 
 .cl__data-row {
   display: flex;
   align-items: baseline;
-  padding: 3px 12px;
-}
-
-.cl__data-row--tall {
-  align-items: flex-start;
+  padding: 2px 0;
+  font-size: 10px;
 }
 
 .cl__data-key {
-  width: 68px;
+  width: 72px;
   flex-shrink: 0;
-  font-size: 9px;
   font-weight: 700;
-  color: #222;
+  color: #000;
   letter-spacing: 0.3px;
+  text-transform: uppercase;
 }
 
 .cl__data-colon {
   width: 12px;
   flex-shrink: 0;
-  font-size: 9px;
-  color: #999;
+  color: #000;
   text-align: center;
 }
 
 .cl__data-val {
   flex: 1;
-  font-size: 9px;
-  color: #555;
+  color: #000;
   word-break: break-word;
+  font-weight: 600;
 }
 
 .cl__data-val--red {
-  color: #C8102E;
+  color: #D32F2F;
   font-weight: 700;
-  font-size: 10px;
 }
 
-.cl__data-sep {
-  height: 0;
-  border-bottom: 0.5px solid #ECEAE3;
-  margin: 0 12px;
-}
-
-/* ── QR Code Area ──────────────────────────────────── */
-.cl__qr {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 4px;
-  padding-top: 2px;
-}
-
-.cl__qr-title {
-  font-size: 8px;
-  font-weight: 700;
-  color: #222;
-  letter-spacing: 0.5px;
-}
-
-.cl__qr-sub {
-  font-size: 7px;
-  color: #666;
-  line-height: 1.4;
-}
-
-/* ── RIGHT COLUMN ─────────────────────────────────── */
-.cl__right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 8px 14px 6px 18px;
-}
-
-/* ── Hazard sections (full width) ──────────────────── */
-.cl__text-col {
-  display: flex;
-  flex-direction: column;
-}
+/* ═════ COLUMNS 2 & 3 — Sections ═════ */
 
 .cl__section {
-  margin-bottom: 3px;
-}
-
-.cl__section-title {
-  font-size: 10px;
-  font-weight: 700;
-  color: #C8102E;
-  letter-spacing: 0.6px;
-  border-bottom: 0.5px solid #C8102E;
-  padding-bottom: 1px;
-  width: fit-content;
   margin-bottom: 2px;
 }
 
+.cl__section-title {
+  font-size: 12px;
+  font-weight: 900;
+  color: #D32F2F;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  line-height: 1.15;
+}
+
+.cl__section-subtitle {
+  font-size: 11px;
+  font-weight: 900;
+  color: #D32F2F;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  line-height: 1.15;
+}
+
 .cl__section-body {
-  font-size: 8.5px;
-  color: #333;
-  line-height: 1.3;
+  font-size: 9.5px;
+  color: #000;
+  line-height: 1.35;
   margin: 0;
 }
 
-/* ── Bottom bar: two rows ──────────────────────────── */
-.cl__icon-col {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding-top: 4px;
+.cl__section-body div {
+  line-height: 1.35;
 }
 
-/* Row 1: DANGEROUS + GHS diamonds */
-.cl__icon-row-top {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+/* ── DANGEROUS badge (bottom of col 2) ────────────── */
+.cl__dangerous-wrap {
+  margin-top: auto;
+  padding-top: 6px;
 }
 
 .cl__dangerous {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
-  height: 22px;
-  border: 1.5px solid #C8102E;
-  border-radius: 4px;
+  border: 2px solid #000;
+  border-radius: 8px;
   background: #fff;
-  color: #C8102E;
+  color: #D32F2F;
   font-family: "Arial Black", Impact, sans-serif;
-  font-size: 11px;
+  font-size: 22px;
   font-weight: 900;
-  letter-spacing: 1.8px;
-  flex-shrink: 0;
-}
-
-.cl__ghs-group {
-  display: flex;
-  align-items: center;
-}
-
-.cl__ghs-row {
-  display: flex;
-  gap: 6px;
-}
-
-.cl__ghs-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
-}
-
-.cl__ghs-diamond {
-  width: 42px;
-  height: 42px;
-}
-
-.cl__ghs-diamond svg {
-  width: 100%;
-  height: 100%;
-}
-
-.cl__ghs-label {
-  font-size: 6.5px;
-  color: #666;
-  letter-spacing: 0.3px;
-  text-align: center;
-}
-
-/* Row 2: Storage + Fire Class inline */
-.cl__extra {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.cl__extra-block {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  white-space: nowrap;
-}
-
-.cl__extra-title {
-  font-size: 7.5px;
-  font-weight: 700;
-  color: #C8102E;
-  letter-spacing: 0.3px;
+  letter-spacing: 2px;
+  padding: 6px 20px;
   text-transform: uppercase;
 }
 
-.cl__extra-sep {
-  color: #bbb;
-  font-size: 8px;
+/* ── Pictograms (bottom of col 3) ─────────────────── */
+.cl__pictograms {
+  margin-top: auto;
+  padding-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
-.cl__extra-text {
-  font-size: 7px;
-  color: #444;
-  line-height: 1.4;
+.cl__pictogram {
+  width: 74px;
+  height: 74px;
+  flex-shrink: 0;
 }
 
-/* ── Slanted Bottom Banner ─────────────────────────── */
+.cl__pictogram svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── Bottom Red Banner (BLACK text) ───────────────── */
 .cl__footer {
-  background: #C8102E;
-  height: 34px;
-  clip-path: polygon(0 14%, 100% 0, 100% 100%, 0 100%);
+  background: #D32F2F;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 20px 0;
+  padding: 0 20px;
 }
 
 .cl__footer-text {
-  color: #fff;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1px;
+  color: #000;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
   text-align: center;
   line-height: 1;
+  text-transform: uppercase;
 }
 
 /* ======================================================
@@ -358,7 +275,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px 15px;
+  padding: 15px 10px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
   overflow: hidden;
   box-sizing: border-box;
@@ -385,6 +302,10 @@
   justify-content: center;
   position: relative;
   gap: 0;
+}
+
+.a4-sheet__inner .cl {
+  width: 100%;
 }
 
 /* Crop marks */
@@ -417,9 +338,10 @@
 .a4-sheet__crop--br::before { width: 10px; height: 0.5px; bottom: 0; right: 0; }
 .a4-sheet__crop--br::after { width: 0.5px; height: 10px; bottom: 0; right: 0; }
 
-/* Cut line between labels */
+/* Cut line between labels (HORIZONTAL — between stacked stickers) */
 .a4-sheet__cut {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 8px;
   width: 100%;
