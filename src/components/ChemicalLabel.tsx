@@ -209,12 +209,21 @@ const ChemicalLabel = ({
             <p className="cl__section-body">{formatFirstAid(safety.firstAidEye)}</p>
           </div>
 
-          {/* <div className="cl__section">
+          {safety.fireClass && (
+            <div className="cl__section">
+              <div className="cl__section-subtitle">FIRE CLASS</div>
+              <p className="cl__section-body">{safety.fireClass}</p>
+            </div>
+          )}
+
+          <div className="cl__section">
             <div className="cl__section-subtitle">KEEP OUT OF REACH OF CHILDREN</div>
-            <p className="cl__section-body">
-              Store in original container. Do not reuse empty container.
-            </p>
-          </div> */}
+            <div className="cl__section-body">
+              <div>Store in original container.</div>
+              <div>Keep container tightly closed.</div>
+              <div>Keep locked and away from children.</div>
+            </div>
+          </div>
 
           <div className="cl__dangerous-wrap">
             <div className="cl__dangerous">DANGEROUS!</div>
