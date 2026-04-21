@@ -272,7 +272,11 @@ const DrumLabel = () => {
               });
             },
           },
-          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+          jsPDF: {
+            unit: "mm",
+            format: "a4",
+            orientation: stickersPerPage === 2 ? "landscape" : "portrait",
+          },
         })
         .save();
     } catch (err) {
