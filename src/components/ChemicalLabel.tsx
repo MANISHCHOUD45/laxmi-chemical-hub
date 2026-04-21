@@ -58,9 +58,19 @@ const WhatsAppIcon = () => (
   </svg>
 );
 
-/** Helper: render a data row only if value is non-empty */
-const DataRow = ({ label, value, red }: { label: string; value: string; red?: boolean }) => {
-  if (!value) return null;
+/** Helper: render a data row. `alwaysShow` keeps the row visible even if value is empty. */
+const DataRow = ({
+  label,
+  value,
+  red,
+  alwaysShow,
+}: {
+  label: string;
+  value: string;
+  red?: boolean;
+  alwaysShow?: boolean;
+}) => {
+  if (!value && !alwaysShow) return null;
   return (
     <div className="cl__data-row">
       <span className="cl__data-key">{label}</span>
@@ -120,11 +130,11 @@ const ChemicalLabel = ({
           </div>
 
           <div className="cl__data-card">
-            <DataRow label="MFG DATE" value={mfgDate} red />
-            <DataRow label="INVOICE" value={invoice} red />
-            <DataRow label="BATCH" value={batchNo} />
-            <DataRow label="MAKE" value={make} />
-            <DataRow label="EX DATE" value={expDate} red />
+            <DataRow label="MFG DATE" value={mfgDate} red alwaysShow />
+            <DataRow label="INVOICE" value={invoice} red alwaysShow />
+            <DataRow label="BATCH" value={batchNo} alwaysShow />
+            <DataRow label="MAKE" value={make} alwaysShow />
+            <DataRow label="EXP DATE" value={expDate} red alwaysShow />
             <DataRow label="NET QTY" value={netQty} />
             <DataRow label="TARE QTY" value={tareQty} />
             <DataRow label="GROSS QTY" value={grossQty} />

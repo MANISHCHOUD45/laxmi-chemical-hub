@@ -7,12 +7,15 @@
 .cl {
   width: 860px;
   max-width: 100%;
+  aspect-ratio: 143 / 94; /* 14.3cm × 9.4cm landscape */
   border: 1px solid #000;
   overflow: hidden;
   font-family: Arial, Helvetica, "Helvetica Neue", sans-serif;
   background: #fff;
   color: #000;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Top Red Banner (BLACK text) ──────────────────── */
@@ -39,9 +42,11 @@
 
 /* ── Body — 3-column grid ─────────────────────────── */
 .cl__body {
+  flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   background: #fff;
+  min-height: 0;
 }
 
 .cl__col {
@@ -260,9 +265,9 @@
    ====================================================== */
 
 .a4-sheet {
-  width: 960px;
+  width: 680px;
   max-width: 100%;
-  aspect-ratio: 297 / 210;
+  aspect-ratio: 210 / 297;
   background: #fff;
   border: 0.5px solid #DAD7CF;
   border-radius: 2px;
@@ -270,7 +275,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px 15px;
+  padding: 15px 10px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
   overflow: hidden;
   box-sizing: border-box;
@@ -292,7 +297,7 @@
   flex: 1;
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
@@ -300,8 +305,7 @@
 }
 
 .a4-sheet__inner .cl {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
 }
 
 /* Crop marks */
@@ -334,20 +338,20 @@
 .a4-sheet__crop--br::before { width: 10px; height: 0.5px; bottom: 0; right: 0; }
 .a4-sheet__crop--br::after { width: 0.5px; height: 10px; bottom: 0; right: 0; }
 
-/* Cut line between labels (VERTICAL — between side-by-side stickers) */
+/* Cut line between labels (HORIZONTAL — between stacked stickers) */
 .a4-sheet__cut {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   gap: 8px;
-  height: 100%;
-  padding: 0 6px;
+  width: 100%;
+  padding: 6px 0;
   flex-shrink: 0;
 }
 
 .a4-sheet__cut-line {
   flex: 1;
-  border-left: 0.5px dashed #888;
+  border-top: 0.5px dashed #888;
 }
 
 .a4-sheet__cut-text {
@@ -359,8 +363,6 @@
   color: #888;
   letter-spacing: 1.5px;
   white-space: nowrap;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
 }
 
 .a4-sheet__scissors {
@@ -914,7 +916,7 @@
   }
 
   @page {
-    size: A4 landscape;
+    size: A4 portrait;
     margin: 0;
   }
 }
