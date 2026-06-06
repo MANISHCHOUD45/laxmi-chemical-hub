@@ -54,6 +54,12 @@ const Header = () => {
             >
               Drum Label
             </button>
+            <button
+              onClick={() => navigate("/quotation")}
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
+              Quotation
+            </button>
             <a href="https://wa.me/919886174335?text=Hello%2C%20I%20would%20like%20to%20inquire%20about%20your%20chemical%20products." target="_blank" rel="noopener noreferrer">
               <Button variant="default" size="sm" className="gap-2">
                 <Phone className="h-4 w-4" />
@@ -99,6 +105,12 @@ const Header = () => {
                 className="text-foreground hover:text-primary transition-colors font-medium text-left"
               >
                 Drum Label
+              </button>
+              <button
+                onClick={() => { navigate("/quotation"); setIsMenuOpen(false); }}
+                className="text-foreground hover:text-primary transition-colors font-medium text-left"
+              >
+                Quotation
               </button>
               <a href="https://wa.me/9886174335?text=Hello%2C%20I%20would%20like%20to%20inquire%20about%20your%20chemical%20products." target="_blank" rel="noopener noreferrer">
                 <Button variant="default" size="sm" className="w-full gap-2">
