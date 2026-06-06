@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import heroImage from "@/assets/hero-chemicals.jpg";
 
 const Hero = () => {
+  const navigate = useNavigate();
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -51,6 +53,15 @@ const Hero = () => {
               onClick={() => scrollToSection("products")}
             >
               Browse Products
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+            <Button 
+              size="lg" 
+              variant="default"
+              className="gap-2 font-semibold shadow-lg hover:shadow-xl transition-all"
+              onClick={() => navigate("/quotation")}
+            >
+              Build Quotation
               <ArrowRight className="h-5 w-5" />
             </Button>
             <Button 
