@@ -11,21 +11,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/sonner";
+import { BuyerAutocomplete } from "@/components/quotation/BuyerAutocomplete";
 import { QuotationPreview, type QuotationProductItem, type DocType } from "@/components/quotation/QuotationPreview";
 
 const quotationSchema = z.object({
   quotationNo:      z.string().optional(),
   quotationDate:    z.string().optional(),
-  buyerName:        z.string().optional(),
+  buyerName:        z.string().min(1, "Buyer name is required."),
   contactName:      z.string().optional(),
-  mobile:           z.string().optional(),
-  email:            z.string().optional(),
-  gstNumber:        z.string().optional(),
+  mobile:           z.string().optional().refine((value) => !value || /^[0-9+\s-]{7,20}$/.test(value), { message: "Enter a valid mobile number." }),
+  email:            z.string().optional().refine((value) => !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), { message: "Enter a valid email address." }),
+  gstNumber:        z.string().optional().refine((value) => !value || /^[0-9A-Z]{15}$/.test(value), { message: "GSTIN should be 15 characters." }),
   billingAddress:   z.string().optional(),
   shippingAddress:  z.string().optional(),
   city:             z.string().optional(),
   state:            z.string().optional(),
-  pincode:          z.string().optional(),
+  pincode:          z.string().optional().refine((value) => !value || /^\d{6}$/.test(value), { message: "Pincode should be 6 digits." }),
   paymentTerms:     z.string().optional(),
   deliveryTerms:    z.string().optional(),
   leadTime:         z.string().optional(),
@@ -54,9 +55,15 @@ type QuotationFormValues = z.infer<typeof quotationSchema>;
 const PASS        = "laxmichem72";
 const STORAGE_KEY = "quotation-draft-v3";
 
+const getTodayDate = (): string => {
+  const today = new Date();
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+};
+
 const defaultValues: QuotationFormValues = {
   quotationNo:     "",
-  quotationDate:   "",
+  quotationDate:   getTodayDate(),
   buyerName:       "",
   contactName:     "",
   mobile:          "",
@@ -91,6 +98,7 @@ export default function Quotation() {
     register,
     control,
     watch,
+    setValue,
     reset,
     getValues,
     trigger,
@@ -366,49 +374,7 @@ export default function Quotation() {
               </div>
 
               <div className="mt-8">
-                <p className="text-sm uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Buyer Information</p>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                  <div className="grid gap-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Buyer Company Name</label>
-                    <Input {...register("buyerName")} placeholder="Buyer company" />
-                  </div>
-                  <div className="grid gap-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Contact Person</label>
-                    <Input {...register("contactName")} placeholder="Contact name" />
-                  </div>
-                  <div className="grid gap-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Mobile Number</label>
-                    <Input {...register("mobile")} placeholder="+91 98765 43210" />
-                  </div>
-                  <div className="grid gap-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Email Address</label>
-                    <Input {...register("email")} placeholder="buyer@example.com" />
-                  </div>
-                  <div className="grid gap-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Buyer GSTIN</label>
-                    <Input {...register("gstNumber")} placeholder="29XXXXX0000X1ZX" />
-                  </div>
-                  <div className="grid gap-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Pincode</label>
-                    <Input {...register("pincode")} placeholder="560001" />
-                  </div>
-                  <div className="grid gap-2 sm:col-span-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Billing Address</label>
-                    <Textarea {...register("billingAddress")} placeholder="Billing address" />
-                  </div>
-                  <div className="grid gap-2 sm:col-span-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Shipping Address</label>
-                    <Textarea {...register("shippingAddress")} placeholder="Shipping address (leave same if same as billing)" />
-                  </div>
-                  <div className="grid gap-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">City</label>
-                    <Input {...register("city")} placeholder="City" />
-                  </div>
-                  <div className="grid gap-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">State</label>
-                    <Input {...register("state")} placeholder="State" />
-                  </div>
-                </div>
+                <BuyerAutocomplete register={register} setValue={setValue} watch={watch} errors={errors} />
               </div>
             </section>
 
