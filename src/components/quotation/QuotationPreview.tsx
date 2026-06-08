@@ -176,6 +176,8 @@ export const QuotationPreview = ({
   const validityValue = validity ?? VALIDITY_OPTIONS[0];
   const signByValue = signBy ?? AUTHORIZED_SIGNATORY_DEFAULT;
 
+  const showHsn = products.some((p) => p.hsn?.trim());
+
   const subtotal   = products.reduce((s, i) => s + Number(i.quantity || 0) * Number(i.rate || 0), 0);
   const totalGst   = products.reduce((s, i) => s + Number(i.quantity || 0) * Number(i.rate || 0) * (Number(i.gst || 0) / 100), 0);
   const grandTotal = subtotal + totalGst;
@@ -266,7 +268,7 @@ export const QuotationPreview = ({
             <tr className="bg-slate-800 text-white">
               <th className="border-b border-slate-700 px-2 py-3 text-center font-semibold">Sr.</th>
               <th className="border-b border-slate-700 px-3 py-3 text-left font-semibold">Product Description</th>
-              <th className="border-b border-slate-700 px-2 py-3 text-center font-semibold">HSN / SAC</th>
+              {showHsn && <th className="border-b border-slate-700 px-2 py-3 text-center font-semibold">HSN / SAC</th>}
               <th className="border-b border-slate-700 px-2 py-3 text-right font-semibold">Qty</th>
               <th className="border-b border-slate-700 px-2 py-3 text-center font-semibold">Unit</th>
               <th className="border-b border-slate-700 px-2 py-3 text-right font-semibold">Rate (₹)</th>
@@ -279,7 +281,7 @@ export const QuotationPreview = ({
           <tbody>
             {products.length === 0 ? (
               <tr>
-                <td colSpan={10} className="border border-slate-200 px-3 py-8 text-center text-sm text-slate-400">
+                <td colSpan={showHsn ? 10 : 9} className="border border-slate-200 px-3 py-8 text-center text-sm text-slate-400">
                   Add at least one product to render the quotation.
                 </td>
               </tr>
@@ -301,7 +303,7 @@ export const QuotationPreview = ({
                         <span className="mt-0.5 block text-[10px] text-slate-400">Packing: {item.packing}</span>
                       )}
                     </td>
-                    <td className="border-b border-slate-100 px-2 py-3 text-center text-slate-500">{item.hsn || "—"}</td>
+                    {showHsn && <td className="border-b border-slate-100 px-2 py-3 text-center text-slate-500">{item.hsn || "—"}</td>}
                     <td className="border-b border-slate-100 px-2 py-3 text-right text-slate-600">{Number(item.quantity || 0).toLocaleString("en-IN")}</td>
                     <td className="border-b border-slate-100 px-2 py-3 text-center text-slate-500">{item.unit || "Kgs"}</td>
                     <td className="border-b border-slate-100 px-2 py-3 text-right text-slate-600">{fmt(Number(item.rate || 0))}</td>
