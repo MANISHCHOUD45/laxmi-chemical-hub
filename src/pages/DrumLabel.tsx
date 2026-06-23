@@ -55,6 +55,7 @@ const DrumLabel = () => {
   const [stickersPerPage, setStickersPerPage] = useState<1 | 2>(1);
   const [thermalSize, setThermalSize] = useState<null | "3x5" | "4x4" | "4x6" | "6x4">(null);
   const [copies, setCopies] = useState(1);
+  const [expYears, setExpYears] = useState<1 | 2 | 3>(3); // Exp = MFG + N years (default 3)
   // The thermal preview IS the generated image, so what you see === what downloads.
   const [thermalUrl, setThermalUrl] = useState<string | null>(null);
   const [thermalDims, setThermalDims] = useState<{ wIn: number; hIn: number } | null>(null);
@@ -351,6 +352,7 @@ const DrumLabel = () => {
     setStickersPerPage(1);
     setThermalSize(null);
     setCopies(1);
+    setExpYears(3);
   };
 
   const withUnit = (v: string) => (v ? `${v} ${form.qtyUnit}` : "");
@@ -359,8 +361,8 @@ const DrumLabel = () => {
     productName: form.productName,
     batchNo: form.batchNo,
     invoice: form.invoice,
-    mfgDate: formatDate(form.mfgDate),
-    expDate: formatDate(form.expDate),
+    mfgDate: form.mfgDate,
+    expDate: form.expDate,
     make: form.make,
     netQty: withUnit(form.netQty),
     tareQty: withUnit(form.tareQty),
@@ -632,7 +634,7 @@ const DrumLabel = () => {
                   disabled={downloading}
                   title="Best for the SEZNIK app \u2014 exact label size at 203 DPI"
                 >
-                  {downloading ? "Generating..." : "\u2B07 PNG (for app)"}
+                  {downloading ? "Generating..." : "\u2B07 PNG"}
                 </button>
                 <button
                   className="drum-label-page__btn drum-label-page__btn--back"
@@ -738,20 +740,56 @@ const DrumLabel = () => {
               <label className="label-form__label">MFG Date</label>
               <input
                 className="label-form__input"
-                type="date"
+                inputMode="numeric"
+                placeholder="DD/MM/YYYY"
+                maxLength={10}
                 value={form.mfgDate}
-                onChange={(e) => handleFormChange("mfgDate", e.target.value)}
+                onChange={(e) => {
+                  const mfg = maskDMY(e.target.value);
+                  setForm((prev) => ({ ...prev, mfgDate: mfg, expDate: expFromMfg(mfg, expYears) }));
+                }}
               />
             </div>
 
             <div className="label-form__row">
               <label className="label-form__label">Exp Date</label>
+              <div style={{ display: "flex", gap: 6, marginBottom: 6, flexWrap: "wrap" }}>
+                {[1, 2, 3].map((y) => (
+                  <button
+                    type="button"
+                    key={y}
+                    onClick={() => {
+                      setExpYears(y as 1 | 2 | 3);
+                      setForm((prev) => ({ ...prev, expDate: expFromMfg(prev.mfgDate, y) }));
+                    }}
+                    style={{
+                      flex: 1,
+                      minWidth: 72,
+                      padding: "9px 10px",
+                      fontSize: 13,
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      borderRadius: 6,
+                      border: expYears === y ? "2px solid #C8102E" : "1px solid #ccc",
+                      background: expYears === y ? "#C8102E" : "#fff",
+                      color: expYears === y ? "#fff" : "#333",
+                    }}
+                  >
+                    {y} Year{y > 1 ? "s" : ""}
+                  </button>
+                ))}
+              </div>
               <input
                 className="label-form__input"
-                type="date"
+                inputMode="numeric"
+                placeholder="DD/MM/YYYY"
+                maxLength={10}
                 value={form.expDate}
-                onChange={(e) => handleFormChange("expDate", e.target.value)}
+                onChange={(e) => handleFormChange("expDate", maskDMY(e.target.value))}
               />
+              <span style={{ fontSize: 11, color: "#888", marginTop: 4 }}>
+                Auto-set to {expYears} year{expYears > 1 ? "s" : ""} from MFG date — you can still edit it.
+              </span>
             </div>
 
             <div className="label-form__row">
@@ -1021,16 +1059,19 @@ const DrumLabel = () => {
         {/* ── Step 4: Preview (Thermal labels) ─────────── */}
         {step === "preview" && thermalSize && (
           <>
-            {/* The preview IS the generated image → it can't differ from the file. */}
+            {/* The preview IS the generated image → it can't differ from the file.
+                Responsive: shows at physical size on desktop, scales down to fit
+                the screen on mobile/tablet while keeping the exact aspect ratio. */}
             <div className="label-preview" ref={previewRef}>
               {thermalUrl ? (
                 <img
                   src={thermalUrl}
                   alt={`${form.productName} label`}
                   style={{
-                    width: `${THERMAL_INCHES[thermalSize][0]}in`,
-                    height: `${THERMAL_INCHES[thermalSize][1]}in`,
                     display: "block",
+                    // physical size on desktop, shrink to fit on narrow screens
+                    width: `min(${THERMAL_INCHES[thermalSize][0]}in, 100%)`,
+                    height: "auto",
                     background: "#fff",
                     boxShadow: "0 2px 14px rgba(0,0,0,0.18)",
                   }}
@@ -1062,11 +1103,42 @@ const DrumLabel = () => {
   );
 };
 
-/** Convert yyyy-mm-dd → "d/m/yyyy" */
-function formatDate(isoDate: string): string {
-  if (!isoDate) return "";
-  const [y, m, d] = isoDate.split("-");
-  return `${parseInt(d)}/${parseInt(m)}/${y}`;
+/** Mask free typing into DD/MM/YYYY (auto-inserts the slashes). */
+function maskDMY(raw: string): string {
+  const d = raw.replace(/\D/g, "").slice(0, 8);
+  let out = d.slice(0, 2);
+  if (d.length > 2) out += "/" + d.slice(2, 4);
+  if (d.length > 4) out += "/" + d.slice(4, 8);
+  return out;
+}
+
+/** Parse "DD/MM/YYYY" → Date (null if incomplete/invalid). */
+function parseDMY(s: string): Date | null {
+  const m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return null;
+  const dd = +m[1];
+  const mm = +m[2];
+  const yyyy = +m[3];
+  const date = new Date(yyyy, mm - 1, dd);
+  if (date.getDate() !== dd || date.getMonth() !== mm - 1 || date.getFullYear() !== yyyy) {
+    return null;
+  }
+  return date;
+}
+
+/** Format Date → "DD/MM/YYYY". */
+function fmtDMY(date: Date): string {
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  return `${dd}/${mm}/${date.getFullYear()}`;
+}
+
+/** Exp date = MFG date + N years, as "DD/MM/YYYY" ("" if MFG not valid yet). */
+function expFromMfg(mfg: string, years: number): string {
+  const d = parseDMY(mfg);
+  if (!d) return "";
+  d.setFullYear(d.getFullYear() + years);
+  return fmtDMY(d);
 }
 
 export default DrumLabel;
