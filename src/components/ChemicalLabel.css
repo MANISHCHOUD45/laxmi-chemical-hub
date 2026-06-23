@@ -445,15 +445,30 @@
 .drum-label-page__btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 8px 20px;
+  padding: 8px 16px;
   font-size: 13px;
   font-weight: 600;
   font-family: Arial, Helvetica, sans-serif;
   border: 2px solid #222;
   border-radius: 4px;
   cursor: pointer;
+  white-space: nowrap;
+  line-height: 1.2;
   transition: background 0.15s, color 0.15s;
+}
+
+/* Compact toolbar on small screens so buttons stay on one line each */
+@media (max-width: 640px) {
+  .drum-label-page__toolbar {
+    gap: 8px;
+    width: 100%;
+  }
+  .drum-label-page__btn {
+    padding: 7px 11px;
+    font-size: 12px;
+  }
 }
 
 .drum-label-page__btn--print {
